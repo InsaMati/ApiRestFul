@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using WebApiAutores.Controllers;
+using WebApiAutores.Middleware;
 
 namespace WebApiAutores
 {
@@ -7,19 +10,20 @@ namespace WebApiAutores
     {
         public Startup(IConfiguration configuration)
         {
-            configuration = configuration;
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-            services.AddDbContext<ApplicationDbContext>(options => 
-            options.UseSqlServer(Configuration.GetConnectionString("defaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddEndpointsApiExplorer();
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddSwaggerGen(c =>
             {
@@ -27,8 +31,12 @@ namespace WebApiAutores
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
         {
+            // Guardar respuestas http
+
+            //app.UseLoguearRespuestaHTTP();
+
             if (env.IsDevelopment())
             {
                 app.UseSwagger();

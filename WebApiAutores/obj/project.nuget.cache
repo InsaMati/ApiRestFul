@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "cXk3QY72XLz+hY1fu6BoCCKueLYzKDiT0Wn8xePHMWg4xMECXoWE5eqc1OaPCjHsRRoqmVCzciaxH2jpKyBOAQ==",
+  "dgSpecHash": "zN0aLoWZLhfndDzC5O3KpH1u3tlphWYm6YupfI0Z01agEAk6W8s8mGhtlt9elAejNAMEnFWIHEqcb9XYn+0qTQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\matia\\source\\repos\\WebApiAutores\\WebApiAutores\\WebApiAutores.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\matia\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
+    "C:\\Users\\matia\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
     "C:\\Users\\matia\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
-    "C:\\Users\\matia\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
+    "C:\\Users\\matia\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\matia\\.nuget\\packages\\microsoft.data.sqlclient\\2.1.4\\microsoft.data.sqlclient.2.1.4.nupkg.sha512",
     "C:\\Users\\matia\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.1.1\\microsoft.data.sqlclient.sni.runtime.2.1.1.nupkg.sha512",
     "C:\\Users\\matia\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.3\\microsoft.entityframeworkcore.6.0.3.nupkg.sha512",
