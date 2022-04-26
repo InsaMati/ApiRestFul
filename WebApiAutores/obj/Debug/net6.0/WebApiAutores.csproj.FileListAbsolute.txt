@@ -61,3 +61,13 @@ C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\obj\Debug\net6.0\WebApiA
 C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\obj\Debug\net6.0\refint\WebApiAutores.dll
 C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\matia\source\repos\WebApiAutores\WebApiAutores\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

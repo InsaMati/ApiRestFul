@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
@@ -9,24 +12,26 @@ namespace WebApiAutores.Controllers
     [ApiController]
 
     [Route("api/libros/{libroId:int}/comentarios")]
+
+
     public class ComentariosController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
-        public ComentariosController(ApplicationDbContext dbContext, IMapper mapper)
+        public ComentariosController(ApplicationDbContext dbContext, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
+            UserManager = userManager;
         }
 
-        
+        public UserManager<IdentityUser> UserManager { get; }
 
         [HttpGet]
 
         public async Task<ActionResult<List<ComentarioDTO>>> get(int libroId)
         {
-
             var existe = await dbContext.Libros.AnyAsync(LibroDb => LibroDb.id == libroId);
 
             if (!existe)
@@ -54,9 +59,15 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpPost]
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(int libroId, ComentarioCreacionDTO comentarioCreacionDTO)
         {
+            var emailClaim = HttpContext.User.Claims.Where(claim => claim.Type == "email").FirstOrDefault();
+            var email = emailClaim.Value;
+            var usuario = await UserManager.FindByEmailAsync(email);
+
+            var usuarioId = usuario.Id;
+
             var existe = await dbContext.Libros.AnyAsync(LibroDb => LibroDb.id == libroId);
 
             if (!existe)
@@ -67,6 +78,7 @@ namespace WebApiAutores.Controllers
             var comentario = mapper.Map<Comentario>(comentarioCreacionDTO);
 
             comentario.LibroId = libroId;
+            comentario.usuarioId = usuarioId;
 
             dbContext.Add(comentario);
 

@@ -9,6 +9,8 @@ namespace WebApiAutores.DTOs
         [StringLength(maximumLength: 250)]
         public string titulo { get; set; }
 
+        public DateTime FechaPublicacion { get; set; }
+
         //public List<ComentarioDTO> comentarios { get; set; }
     }
 }

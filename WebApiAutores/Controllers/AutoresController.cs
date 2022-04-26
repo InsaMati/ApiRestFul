@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
@@ -8,18 +10,22 @@ namespace WebApiAutores.Controllers
 {
     [ApiController]
     [Route("api/autores")] // api/autores => ruta [controller] se sustituye por el nombre del controlador
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public AutoresController(ApplicationDbContext context, IMapper mapper)
+        public AutoresController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
             this.context = context;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<List<AutorDTO>> Get()
         {
             var autores = await context.Autores.ToListAsync();
@@ -51,7 +57,6 @@ namespace WebApiAutores.Controllers
         }
 
         [HttpPut("{id:int}")]
-
         public async Task<ActionResult> Put(AutorCreacionDTO autorCreacionDTO, int id)
         {
             var existe = await context.Autores.AnyAsync(x => x.id == id);
@@ -70,7 +75,7 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpPost] 
+        [HttpPost]  
 
         public async Task<ActionResult> Post([FromBody] AutorCreacionDTO AutorCreacionDTO)
         {
@@ -106,8 +111,15 @@ namespace WebApiAutores.Controllers
             context.Remove(new Autor { id = id });
             await context.SaveChangesAsync();
 
-            return Ok();
+            return NoContent();
 
+        }
+
+        [HttpGet("configuraciones")]
+
+        public ActionResult<string> ObtenerConfiguracion()
+        {
+            return configuration["apellido"];
         }
     }
 }
