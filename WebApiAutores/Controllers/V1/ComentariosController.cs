@@ -6,12 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
+using WebApiAutores.Utilidades;
 
-namespace WebApiAutores.Controllers
+namespace WebApiAutores.Controllers.V1
 {
     [ApiController]
 
-    [Route("api/libros/{libroId:int}/comentarios")]
+    [Route("api/v1/libros/{libroId:int}/comentarios")]
 
 
     public class ComentariosController : ControllerBase
@@ -28,9 +29,9 @@ namespace WebApiAutores.Controllers
 
         public UserManager<IdentityUser> UserManager { get; }
 
-        [HttpGet]
+        [HttpGet (Name = "obtenerComentarioLibros")]
 
-        public async Task<ActionResult<List<ComentarioDTO>>> get(int libroId)
+        public async Task<ActionResult<List<ComentarioDTO>>> get(int libroId,[FromQuery] PaginacionDTO paginacionDTO)
         {
             var existe = await dbContext.Libros.AnyAsync(LibroDb => LibroDb.id == libroId);
 
@@ -39,7 +40,9 @@ namespace WebApiAutores.Controllers
                 return NotFound();
             }
 
-            var comentarios = await dbContext.Comentarios.Where(c => c.LibroId == libroId).ToListAsync();
+            var queryable = dbContext.Comentarios.Where(c => c.LibroId == libroId).AsQueryable();
+            await HttpContext.InsertarParametrosPaginacionEnCabecera(queryable);
+            var comentarios = await queryable.OrderBy(comentario => comentario.Id).Paginar(paginacionDTO).ToListAsync();
 
             return mapper.Map<List<ComentarioDTO>>(comentarios);
         }
@@ -58,7 +61,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<ComentarioDTO>(comentario);
         }
 
-        [HttpPost]
+        [HttpPost (Name = "crearComentario")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(int libroId, ComentarioCreacionDTO comentarioCreacionDTO)
         {
@@ -88,7 +91,7 @@ namespace WebApiAutores.Controllers
             return CreatedAtRoute("obtenerComentario", new {id = comentario.Id, libroId = libroId},comentarioDTO);
         }
 
-        [HttpPut ("{id:int}")]
+        [HttpPut ("{id:int}", Name = "actualizarComentario")]
 
         public async Task<IActionResult> Put(int libroId,int id ,ComentarioCreacionDTO ComentarioCreacionDTO)
         {

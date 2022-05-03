@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using WebApiAutores.DTOs;
 using WebApiAutores.Entidades;
 
-namespace WebApiAutores.Controllers
+namespace WebApiAutores.Controllers.V1
 {
     [ApiController]
 
-    [Route("api/libros")]
+    [Route("api/v1/libros")]
     public class LibrosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -21,7 +21,7 @@ namespace WebApiAutores.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("{id:int}", Name = "ObtenerLibro")]
+        [HttpGet("{id:int}", Name = "obtenerLibro")]
 
         public async Task<ActionResult<LibroDTOconAutores>> Get(int id)
         {
@@ -42,7 +42,7 @@ namespace WebApiAutores.Controllers
             return mapper.Map<LibroDTOconAutores>(libro);
         }
 
-        [HttpPost]
+        [HttpPost (Name = "crearLibro")]
 
         public async Task<ActionResult<Libro>> Post(LibroCreacionDTO libroCreacionDTO)
         {
@@ -71,7 +71,7 @@ namespace WebApiAutores.Controllers
             return CreatedAtRoute("ObtenerLibro", new { id = libro.id }, libroDTO);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}", Name = "actualizarLibro")]
 
         public async Task<IActionResult> Put(int id, LibroCreacionDTO libroCreacionDTO)
         {
@@ -102,7 +102,7 @@ namespace WebApiAutores.Controllers
             }
         }
 
-        [HttpPatch("{id:int}")]
+        [HttpPatch("{id:int}", Name = "patchLibro")]
 
         public async Task<ActionResult> Patch (int id, JsonPatchDocument<LibroPatchDTO> patchDocument)
         {
@@ -136,7 +136,7 @@ namespace WebApiAutores.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}", Name = "borrarLibro")]
         public async Task<ActionResult> Delete(int id)
         {
             var existe = await context.Libros.AnyAsync(x => x.id == id);

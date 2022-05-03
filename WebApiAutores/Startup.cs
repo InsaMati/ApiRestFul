@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -9,6 +10,7 @@ using System.Text.Json.Serialization;
 using WebApiAutores.Controllers;
 using WebApiAutores.Middleware;
 using WebApiAutores.Servicios;
+using WebApiAutores.Utilidades;
 
 namespace WebApiAutores
 {
@@ -24,7 +26,11 @@ namespace WebApiAutores
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions
+            services.AddControllers(opciones =>
+            {
+                opciones.Conventions.Add(new SwaggerAgrupaPorVersion());
+
+            }).AddJsonOptions
                 (x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -52,7 +58,7 @@ namespace WebApiAutores
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("esAdmin", policy => policy.RequireClaim("esAdmin"));
+                options.AddPolicy("EsAdmin", policy => policy.RequireClaim("EsAdmin"));
             });
 
             services.AddDataProtection();
@@ -61,13 +67,21 @@ namespace WebApiAutores
             {
                 opciones.AddDefaultPolicy(builder =>
                 {
-                    builder.WithOrigins("https://www.apirequest.io").AllowAnyMethod().AllowAnyHeader();
+                    builder.WithOrigins("https://www.apirequest.io").AllowAnyMethod().AllowAnyHeader()
+                    .WithExposedHeaders(new string[] { "cantidadTotalRegistros" });
                 });
             });
+
+            services.AddTransient<GeneradorEnlaces>();
+            services.AddTransient<HATEOASAutorFilterAttribute>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiAutores", Version = "v1" });
+                c.SwaggerDoc("v2", new OpenApiInfo { Title = "WebApiAutores", Version = "v2" });
+                c.OperationFilter<AgregarParametroHATEOAS>();
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -95,7 +109,7 @@ namespace WebApiAutores
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             // Guardar respuestas http
 
@@ -103,9 +117,15 @@ namespace WebApiAutores
 
             if (env.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApiAutores v1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "WebApiAutores v2");
+            });
 
             app.UseHttpsRedirection();
 

@@ -2,9 +2,8 @@
 
 namespace WebApiAutores.DTOs
 {
-    public class AutorDTO
+    public class AutorDTO : Recurso
     {
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es requerido.")]
